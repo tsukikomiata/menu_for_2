@@ -1,6 +1,7 @@
 import pygame
 from pygame import *
 
+
 class Menu():
     def __init__(self, game):
         self.game = game
@@ -15,6 +16,7 @@ class Menu():
         self.game.window.blit(self.game.display, (0, 0))
         pygame.display.update()
         self.game.reset_keys()
+
 
 class MainMenu(Menu):
     def __init__(self, game):
@@ -31,13 +33,12 @@ class MainMenu(Menu):
             self.game.check_events()
             self.check_input()
             self.game.display.fill(self.game.BLACK)
-            self.game.draw_text('Main Menu', 20, self.game.DISPLAY_W / 2 , self.game.DISPLAY_H / 2 - 50)
+            self.game.draw_text('Main Menu', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 50)
             self.game.draw_text("Three in a row", 15, self.startx, self.starty)
             self.game.draw_text("Multiplicity", 15, self.start2x, self.start2y)
             self.game.draw_text("Exit", 15, self.exitx, self.exity)
             self.draw_cursor()
             self.blit_screen()
-
 
     def move_cursor(self):
         if self.game.DOWN_KEY:
@@ -65,32 +66,14 @@ class MainMenu(Menu):
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == 'Three in a row':
+                self.game.state = 'Three in a row'
                 self.game.playing = True
             elif self.state == 'Multiplicity':
-                self.game.curr_menu = self.game.options
+                self.game.state = 'Multiplicity'
+                self.game.playing = True
             elif self.state == 'Exit':
                 self.game.curr_menu = self.game.exit
             self.run_display = False
-
-# class OptionsMenu(Menu):
-#     def __init__(self, game):
-#         Menu.__init__(self, game)
-#         self.volx, self.voly = self.mid_w, self.mid_h + 20
-#
-#     def display_menu(self):
-#         self.run_display = True
-#         while self.run_display:
-#             self.game.check_events()
-#             self.check_input()
-#             self.game.display.fill((0, 0, 0))
-#             self.game.draw_text('Multiplicity', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 30)
-#             self.draw_cursor()
-#             self.blit_screen()
-#
-#     def check_input(self):
-#         if self.game.BACK_KEY:
-#             self.game.curr_menu = self.game.main_menu
-#             self.run_display = False
 
 class ExitMenu(Menu):
     def __init__(self, game):
@@ -101,10 +84,12 @@ class ExitMenu(Menu):
         while self.run_display:
             self.game.check_events()
             if self.game.START_KEY or self.game.BACK_KEY:
+                pygame.quit()
                 self.game.curr_menu = self.game.main_menu
                 self.run_display = False
             self.game.display.fill(self.game.BLACK)
             self.game.draw_text('Exit', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
             self.game.draw_text('Are you sure?', 15, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 + 10)
             self.game.draw_text('Press Enter to exit', 10, self.game.DISPLAY_W * 3 / 4, self.game.DISPLAY_H * 5 / 6)
+            self.game.state = 'Exit'
             self.blit_screen()
